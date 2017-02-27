@@ -13,5 +13,25 @@ The input to the program is a protien database which consists of a long string o
 
 ---
 
+The Script had to take care of some basic feature - 
+
+1. Had the script file chop the DNA into segments
+2. Run each part on Individual cores simultaneously 
+3. This Process contains additional overheads like 
+	- Splitting It perfectly with overlaps to ensure regularity is maintained while searching each file
+	- Some redundant operations are being performed, but negligible for larger input
+	- Tailoring back the output files together to ensure output is readable and consistent with the expected output
+4. After processing, a script stitches all the output files together
+5. But there is a E-value which is proportional to the size of dna inputted which needs to be modified
+6. The modified E -Value is then used to filter out some more of the output hits
+7. The remaining hits are tailored back to give effective output
+
+
+---
+
+Here are the results gained upon running the scripts - 
+
+![Benchmarks](/assets/benchmarks.png)
+
 
 

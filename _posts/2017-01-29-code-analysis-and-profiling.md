@@ -37,5 +37,5 @@ The output clearly shows the ShiftWin_1 consumes majority of the time for the cu
 Now we will be trying to use a Dynamic code analysis tool known ad DOxygen, it is also used to generate documentation for large projects.Doxygen provided us with data about parameters being passed ot functions and tracing the call graph.
 This gives us a clear idea about the purpose and functionality of ShiftWin1.
 
-![Cloudflare architecture](/assets/shiftwin.png)
+![Call graph](/assets/shiftwin.png)
 
