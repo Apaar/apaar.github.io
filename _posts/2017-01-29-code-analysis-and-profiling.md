@@ -54,8 +54,21 @@ The output clearly shows the ShiftWin_1 consumes majority of the time for the cu
 
 **Doxygen**
 
-Now we will be trying to use a Dynamic code analysis tool known ad Doxygen, it is also used to generate documentation for large projects.Doxygen provided us with data about parameters being passed ot functions and tracing the call graph.
-This gives us a clear idea about the purpose and functionality of ShiftWin1.
+Now we will be trying to use a Dynamic code analysis tool known ad Doxygen, it is normally used to generate documentation for large projects.We can also configure doxygen to extract the code structure from undocumented source files. This is very useful to quickly find your way in large source distributions. Doxygen can also visulize the relations between the various elements by means of including dependecy graphs, inheritance diagrams, and collaberation diagrams, which are all generated automatically.
+
+Running doxygen on the blastx codebase which spans a few million lines of code will give us a clear idea about the purpose and functionality of ShiftWin1.
 
 ![Call graph](/assets/shiftwin.png)
+
+
+
+From the above graph we can clearly see the functions which call ShiftWin1 and who it calls.ShiftWin1 is a recursive fuction which is used to shift the comparision frame by one every time a possible match is found.
+
+---
+
+**Valgrind**
+
+Valgrind is a suite of tools for debugging and profiling programs. There are three tools: a memory error detector, a time profiler, and a space profiler.For profiling purposes, the time profilier along with the space profilier are quite usefull.Valgrind is a form of dynamic profilier .ie it runs and profilies while the executable is run.It increases the time of execution quite a bit.
+
+
 
