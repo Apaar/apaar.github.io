@@ -43,5 +43,5 @@ Upon looking at the /src folder ,the main was located in a file called grep.c, e
 
 Ultimately I had to go into the /bin and /sbin folders and delete the binaries(where it had been installed) and manually delete the binaries and rebuild ,the autoconfig used fallbacks which could be used in case of the system not having grep and successfully built.
 
-Upon further analysis of the core grep code and some messing around, i felt that it would be too hard to parallelize it due to the occurance of a very large number of compatiblity options and code.  
+Upon further analysis of the core grep code and some messing around, I felt that it would be too hard to parallelize it due to the occurance of a very large number of compatiblity options and code.In the next part we will discuss my attempts at creating a threaded barebones version on grep.
 
