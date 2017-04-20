@@ -5,7 +5,7 @@ categories:
 - blog
 ---
 
-After the mishaps with GNU Grep i decided to give up on modifying the official codebase and tried to write my own version of grep.It takes a file as input and does simple string matching on it in a parallelized manner.This was written in C and pThreads were used to achive parallelization.In this post we will be discussing that code(can be found [here](https://github.com/Apaar/Parallel-Computing/tree/master/grep)).
+After the mishaps with GNU Grep I decided to give up on modifying the official codebase and tried to write my own version of grep.It takes a file as input and does simple string matching on it in a parallelized manner.This was written in C and pThreads were used to achive parallelization.In this post we will be discussing that code(can be found [here](https://github.com/Apaar/Parallel-Computing/tree/master/grep)).
 
 My first approch was to figure out a way of separating the file into chunks so as to make it easier to offload a section of the search onto each core.For this I used mmap along with a simple structure.After a file had been mapped in memory along with the shared memory flag to allow for each of the threads to be able to access the file's contents in memory.But this approach does require the system to have sufficient memory to load almost the whole file into memory at once, this is because despite load on use used mmap ,all of the threads will be using differnet portions of the file at once.Once the file is loaded into memory.This is the code that does the same.
 

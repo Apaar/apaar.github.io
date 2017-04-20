@@ -38,11 +38,32 @@ Upon running the parallel version against the normal GNU grep i achived around 4
 
 ### Exploring the GNU Grep Codebase(and a minor mess up...)
 
-Enthusiastic about threading the algorithm of GNU Grep(i had read in a  couple of places that boyer-moore was not too hard to parallelize) , I downloaded the grep-3.0's source code from gnu.org.Upon unpacking the source i was met by a very large amount of code ,this is mainly to make sure that grep can be compiled and cofigured for a very large number of distributions of linux and also to support a wide array of options. 
+Enthusiastic about threading the algorithm of GNU Grep(i had read in a  couple of places that boyer-moore was not too hard to parallelize) , I downloaded the grep-3.0's source code from [here](https://ftp.gnu.org/gnu/grep/).Upon unpacking the source i was met by a very large amount of code ,this is mainly to make sure that grep can be compiled and cofigured for a very large number of distributions of linux and also to support a wide array of options. 
 
 Upon looking at the /src folder ,the main was located in a file called grep.c, enthusiastic to make some small changes i added a simple "hello" in the start of to trace the flow of the program.To make the source we had to generate a auto-config and hit make.Unfortunately I hit make make install too! This resulted in the linux I was working on having it's native grep being overwritten.This resulted in a lot of system utilites like the package manager failing.I immediately tried to revert the changes and rebuild the source, but it looks like the program used to generate the auto config itself also used grep.The presense of "hello" in the output was causing it all to fail :(
 
 Ultimately I had to go into the /bin and /sbin folders and delete the binaries(where it had been installed) and manually delete the binaries and rebuild ,the autoconfig used fallbacks which could be used in case of the system not having grep and successfully built.
 
 Upon further analysis of the core grep code and some messing around, I felt that it would be too hard to parallelize it due to the occurance of a very large number of compatiblity options and code.In the next part we will discuss my attempts at creating a threaded barebones version on grep.
+
+This was the gprof flat profile of grep.memchr_kwset is the function that does the comparisions and bmexec is the driver funtion for the whole boyer-moore search. 
+
+{% highlight c %}
+
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 56.51      5.21     5.21    68403     0.08     0.09  bmexec
+ 32.97      8.25     3.04                             grepdesc
+  7.54      8.95     0.70 52749779     0.00     0.00  memchr_kwset
+  2.28      9.16     0.21                             memchr2
+  0.33      9.19     0.03                             safe_read
+  0.22      9.21     0.02                             mbscasecmp
+  0.11      9.22     0.01    91706     0.00     0.00  fillbuf
+  0.05      9.22     0.01        1     5.00     5.00  treenext
+  0.00      9.22     0.00    68403     0.00     0.00  kwsexec
+  
+{% endhighlight c %}
 
