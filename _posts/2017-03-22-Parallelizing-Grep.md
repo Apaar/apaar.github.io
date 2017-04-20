@@ -15,7 +15,8 @@ From what I have read grep further optimises this by -
 
 ### Initial Exploration
 
-One interested fact to be noted is that GNU Grep is not parallelized and does not use any form of threading.It works in serial, this could be attributed to the fact that it was first written in the 80's and to maintain compatibility with the vast number of devices that use it ,threding was never introduced.If you look online one very common solution is to use GNU Parallel.This is the description of how it works in some of the documentation of the design choices behind GNU Parallel
+One interested fact to be noted is that GNU Grep is not parallelized and does not use any form of threading.It works in serial, this could be attributed to the fact that it was first written in the 80's and to maintain compatibility with the vast number of devices that use it ,threding was never introduced.If you look online one very common solution is to use GNU Parallel.
+This is the description of how it works in some of the documentation of the design choices behind GNU Parallel(copy mapsted the relevant parts) -
 
 1. The easiest way to explain what GNU parallel does is to assume that there are a number of job slots, and when a slot becomes available a job from the queue will be run in that slot. But originally GNU parallel did not model job slots in the code.
 
@@ -35,9 +36,9 @@ Here the -j+1 argument instructs the shell to create on job more than the cores 
 
 Upon running the parallel version against the normal GNU grep i achived around 4-5 times speed up on a 2GB file containing Housefly DNA
 
-### Exploring the GNU Parallel Codebase
+### Exploring the GNU Grep Codebase(and a minor mess up...)
 
-Enthusiastic about threading the algorithm of GNU parallel(i had read in a  couple of places that boyer-moore was not too hard to parallelize) , I downloaded the grep-3.0's source code from gnu.org.Upon unpacking the source i was met by a very large amount of code ,this is mainly to make sure that grep can be compiled and cofigured for a very large number of distributions of linux and also to support a wide array of options. 
+Enthusiastic about threading the algorithm of GNU Grep(i had read in a  couple of places that boyer-moore was not too hard to parallelize) , I downloaded the grep-3.0's source code from gnu.org.Upon unpacking the source i was met by a very large amount of code ,this is mainly to make sure that grep can be compiled and cofigured for a very large number of distributions of linux and also to support a wide array of options. 
 
 Upon looking at the /src folder ,the main was located in a file called grep.c, enthusiastic to make some small changes i added a simple "hello" in the start of to trace the flow of the program.To make the source we had to generate a auto-config and hit make.Unfortunately I hit make make install too! This resulted in the linux I was working on having it's native grep being overwritten.This resulted in a lot of system utilites like the package manager failing.I immediately tried to revert the changes and rebuild the source, but it looks like the program used to generate the auto config itself also used grep.The presense of "hello" in the output was causing it all to fail :(
 
