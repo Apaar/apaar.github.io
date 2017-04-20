@@ -15,7 +15,7 @@ From what I have read grep further optimises this by(copy pasted relevent portio
 
 ### Initial Exploration/GNU Parallel
 
-One interested fact to be noted is that GNU Grep is not parallelized and does not use any form of threading.It works in serial, this could be attributed to the fact that it was first written in the 80's and to maintain compatibility with the vast number of devices that use it ,threding was never introduced.If you look online one very common solution is to use GNU Parallel.
+One interested fact to be noted is that GNU Grep is not parallelized and does not use any form of threading.It works in serial, this could be attributed to the fact that it was first written in the 80's and to maintain compatibility with the vast number of devices that use it ,threading was never introduced.If you look online one very common solution is to use GNU Parallel.
 This is the description of how it works in some of the documentation of the design choices behind GNU Parallel(copy pasted the relevant parts) -
 
 1. The easiest way to explain what GNU parallel does is to assume that there are a number of job slots, and when a slot becomes available a job from the queue will be run in that slot. But originally GNU parallel did not model job slots in the code.
@@ -32,9 +32,7 @@ Thus, we can run grep with GNU Parallel with the command -
 time find /home/apaar/Parallel-Computing type/test1  | parallel -k -j150% -n 1000 -m grep -h "hi" {} | cat > op
 {% endhighlight %}
 
-Here the -j150% argument instructs the shell to create 1.5 job per cores on the computer.This helps with I/O bound processes like grep.
-
-Upon running the parallel version against the normal GNU grep i achived around 4-5 times speed up on a 2GB file containing Housefly DNA
+Here the -j150% argument instructs the shell to create 1.5 job per cores on the computer.This helps with I/O bound processes like grep.find is used to feed grep the file names and time was used only for benchmarking(results in next post).
 
 ### Exploring the GNU Grep Codebase(and a minor mess up...)
 
@@ -46,7 +44,7 @@ Ultimately I had to go into the /bin and /sbin folders and delete the binaries(w
 
 Upon further analysis of the core grep code and some messing around, I felt that it would be too hard to parallelize it due to the occurance of a very large number of compatiblity options and code.In the next part we will discuss my attempts at creating a threaded barebones version on grep.
 
-This was the gprof flat profile of grep.memchr_kwset is the function that does the comparisions and bmexec is the driver funtion for the whole boyer-moore search. 
+This was the gprof flat profile of grep.memchr_kwset is the function that does the comparisions and bmexec is the driver function for the whole boyer-moore search and calls memchr_kwset a very large number of times.The missing bit of data was because one of the c files was being compiled with compiler optimisation and gprof was not able to glean information cos of that. 
 
 {% highlight c %}
 
