@@ -34,7 +34,7 @@ Since it is a string match/search algorithm we could simply split up the input f
 
 ### Details and Issues
 
-The input to the program is a protein database which consists of a long string of ACTG characters and alignment takes place against a smaller protien or amino acid.Since it is simple alignment the larger input can be split up into multiple smaller dna sequences and searched on.Each of these input files can be run on a separate processor of a multicore machine improving time efficiency.We will be writing a simple shell script to take the split up input file and spawn a process for each core and combine the results in the end.
+The input to the program is a protein database which consists of a long string of ACTG characters and alignment takes place against a smaller protein or amino acid.Since it is simple alignment the larger input can be split up into multiple smaller dna sequences and searched on.Each of these input files can be run on a separate processor of a multicore machine improving time efficiency.We will be writing a simple shell script to take the split up input file and spawn a process for each core and combine the results in the end.
 
 But there would be two major issues - 
 

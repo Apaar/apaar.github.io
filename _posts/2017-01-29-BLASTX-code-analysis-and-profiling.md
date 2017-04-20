@@ -5,14 +5,14 @@ categories:
 - blog
 ---
 
-Many a time we have to deal with the situation of having to analyse code written by someone else in order to debug errors or improve efficency via methods such as parallelizing or identifying bottlenecks in the code.It is imperitive that we fully understand the code flow, analyse the portions of the code that are most time consuming and work on them.
-There are various ways in which we can approch this problem.One is via static code analysis via call graphs and another is Profiling tools like Valgrind/Callgrind and GProf.In this post we will be discussing some of these tools along with some use cases(blastx) and examples.
+Many a time we have to deal with the situation of having to analyse code written by someone else in order to debug errors or improve efficiency via methods such as parallelizing or identifying bottlenecks in the code.It is imperative that we fully understand the code flow, analyse the portions of the code that are most time consuming and work on them.
+There are various ways in which we can approach this problem.One is via static code analysis via call graphs and another is Profiling tools like Valgrind/Callgrind and GProf.In this post we will be discussing some of these tools along with some use cases(blastx) and examples.
 
 ---
 
 **NCBI-BLAST**
 
-To demostrate these tools we will be working with the NCBI(National Center for Biotechnology Information) implemenation of the BLAST(Basic Local Alignment Search Tool) algorithm.We will specifically be dealing with the blastx variant of this algorithm.It is an algorithm for comparing primary biological sequence information, such as the amino-acid sequences of proteins or the nucleotides of DNA sequences. A BLAST search enables a researcher to compare a query sequence with a library or database of sequences, and identify library sequences that resemble the query sequence above a certain threshold.
+To demonstrate these tools we will be working with the NCBI(National Center for Biotechnology Information) implementation of the BLAST(Basic Local Alignment Search Tool) algorithm.We will specifically be dealing with the blastx variant of this algorithm.It is an algorithm for comparing primary biological sequence information, such as the amino-acid sequences of proteins or the nucleotides of DNA sequences. A BLAST search enables a researcher to compare a query sequence with a library or database of sequences, and identify library sequences that resemble the query sequence above a certain threshold.
 
 ---
 
@@ -26,9 +26,9 @@ Several forms of output are available from the analysis -
 
 	2) The call graph is also displayed along with the number of times calls were made in the graph. It can be used to identify and reduce the number of calls to expensive functions/sub-routines.
 
-	3) The annotated source listing is a modified cpy of the code where each line of code also has the number of times it was executed.
+	3) The annotated source listing is a modified copy of the code where each line of code also has the number of times it was executed.
 
-For blastx I had to change couple of flags in their Makefile because they were stripping the executable which results in loss of the symbol table unpon creation of executable.A gmon.out file is generated which upon using the command gprof "executable name" gmon.out > analysis.txt, the following output was produced.
+For blastx I had to change couple of flags in their Makefile because they were stripping the executable which results in loss of the symbol table upon creation of executable.That is also why some of the call graphs are missing as I was not able to weed out all the compiler optimisations.A gmon.out file is generated which upon using the command gprof "executable name" gmon.out > analysis.txt, the following output was produced.
 
 {% highlight c %}
 
@@ -48,13 +48,13 @@ Each sample counts as 0.01 seconds.
 
 {% endhighlight %}
 
-The output clearly shows the ShiftWin_1 consumes majority of the time for the current input case.Upon further analysis/reading, Shiftwin happens to be the function that shifts the window accross which string comparisions are taking place.
+The output clearly shows the ShiftWin_1 consumes majority of the time for the current input case.Upon further analysis/reading, Shiftwin happens to be the function that shifts the window across which string comparisons are taking place.
 
 ---
 
 **Doxygen**
 
-Now we will be trying to use a Dynamic code analysis tool known as Doxygen, it is normally used to generate documentation for large projects.We can also use it to automatically generate and analyse the code structure of larger undocumented codes. It can also visulize the relations between the sub-routines in code using dependecy graphs, inheritance diagrams, and collaberation diagrams.
+Now we will be trying to use a Dynamic code analysis tool known as Doxygen, it is normally used to generate documentation for large projects.We can also use it to automatically generate and analyse the code structure of larger undocumented codes. It can also visualize the relations between the sub-routines in code using dependency graphs, inheritance diagrams, and collaboration diagrams.
 
 Running doxygen on the blastx codebase which spans a few million lines of code will give us a clear idea about the purpose and functionality of ShiftWin1.
 
@@ -62,13 +62,13 @@ Running doxygen on the blastx codebase which spans a few million lines of code w
 
 
 
-From the above graph we can clearly see the functions which call ShiftWin1 and who it calls.ShiftWin1 is a recursive fuction which is used to shift the comparision frame by one every time a possible match is found.
+From the above graph we can clearly see the functions which call ShiftWin1 and who it calls.ShiftWin1 is a recursive function which is used to shift the comparison frame by one every time a possible match is found.
 
 ---
 
 **Valgrind**
 
-Valgrind is a suite of tools for debugging and profiling programs. There are three tools: a memory error detector, a time profiler, and a space profiler.For profiling purposes, the time profilier along with the space profilier are quite usefull.Valgrind is a form of dynamic profilier .ie it runs and profilies while the executable is run.It increases the time of execution quite a bit.
+Valgrind is a suite of tools for debugging and profiling programs. There are three tools: a memory error detector, a time profiler, and a space profiler.For profiling purposes, the time profiler along with the space profiler are quite useful.Valgrind is a form of dynamic profiler .ie it runs and profiles while the executable is run.It increases the time of execution quite a bit.
 
 ---
 
@@ -76,6 +76,7 @@ Valgrind is a suite of tools for debugging and profiling programs. There are thr
 
 Through this analysis we identified the function ShiftWin_1 to be consuming majority of the time in the program.Unfortunately on further reading and research i realised modifying it to produce a speed gain may be beyond me in a timely manner.Thus, I focused my efforts on another interesting solution that has been discussed in the next post :)
 An interesting point to note was that when I found CUDA code for the BLAST shifwin_1 was the function that has been converted and used to achieve a almost 30X speedup on the existing implementation.
+
 
 
 
